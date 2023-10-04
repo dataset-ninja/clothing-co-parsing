@@ -106,14 +106,14 @@ def convert_and_upload_supervisely_project(
         img_wight = image_np.shape[1]
 
         ann_path = os.path.join(anns_path, image_to_anns[get_file_name_with_ext(image_path)])
-        # if ann_path.endswith(".txt"):
-        #     with open(ann_path) as f:
-        #         content = f.read().split("\n")
-        #         for curr_data in content:
-        #             if len(curr_data) != 0:
-        #                 curr_meta = idx_to_tag_meta[int(curr_data)]
-        #                 tag = sly.Tag(curr_meta)
-        #                 tags.append(tag)
+        if ann_path.endswith(".txt"):
+            with open(ann_path) as f:
+                content = f.read().split("\n")
+                for curr_data in content:
+                    if len(curr_data) != 0:
+                        curr_meta = idx_to_tag_meta[int(curr_data)]
+                        tag = sly.Tag(curr_meta)
+                        tags.append(tag)
         if not ann_path.endswith(".txt"):
             mask_np = sly.imaging.image.read(ann_path)
             unique_colors = get_unique_colors(mask_np)
@@ -134,6 +134,7 @@ def convert_and_upload_supervisely_project(
             if idx != 0:
                 color = (int(row[1]), int(row[2]), int(row[3]))
                 color_to_obj_class[color] = sly.ObjClass(row[0], sly.Bitmap, color=color)
+                idx_to_tag_meta[idx - 1] = sly.TagMeta(row[0], sly.TagValueType.NONE)
 
     image_to_anns = {}
     with open(image_to_anns_path, "r") as file:
@@ -144,7 +145,7 @@ def convert_and_upload_supervisely_project(
 
     project = api.project.create(workspace_id, project_name, change_name_if_conflict=True)
 
-    meta = sly.ProjectMeta(obj_classes=list(color_to_obj_class.values()))
+    meta = sly.ProjectMeta(obj_classes=list(color_to_obj_class.values()), tag_metas=list(idx_to_tag_meta.values()))
     api.project.update_meta(project.id, meta.to_json())
 
     dataset = api.dataset.create(project.id, ds_name, change_name_if_conflict=True)

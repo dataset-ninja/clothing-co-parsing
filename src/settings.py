@@ -13,8 +13,8 @@ from dataset_tools.templates import (
 ##################################
 # * Before uploading to instance #
 ##################################
-PROJECT_NAME: str = "Clothing Co-Parsing"
-PROJECT_NAME_FULL: str = "Clothing Co-Parsing"
+PROJECT_NAME: str = "CCP"
+PROJECT_NAME_FULL: str = "CCP: Clothing Co-Parsing"
 HIDE_DATASET = True  # set False when 100% sure about repo quality
 
 ##################################
@@ -37,7 +37,7 @@ if RELEASE_DATE is None:
 HOMEPAGE_URL: str = "https://github.com/bearpaw/clothing-co-parsing"
 # e.g. "https://some.com/dataset/homepage"
 
-PREVIEW_IMAGE_ID: int = 6599743
+PREVIEW_IMAGE_ID: int = 6604612
 # This should be filled AFTER uploading images to instance, just ID of any image.
 
 GITHUB_URL: str = "https://github.com/dataset-ninja/clothing-co-parsing"
@@ -76,7 +76,9 @@ ORGANIZATION_URL: Optional[Union[str, List[str]]] = [
 ]
 
 # Set '__PRETEXT__' or '__POSTTEXT__' as a key with string value to add custom text. e.g. SLYTAGSPLIT = {'__POSTTEXT__':'some text}
-SLYTAGSPLIT: Optional[Dict[str, Union[List[str], str]]] = None
+SLYTAGSPLIT: Optional[Dict[str, Union[List[str], str]]] = {
+    "__POSTTEXT__": "Dataset contains image-level tags"
+}
 TAGS: Optional[List[str]] = None
 
 
