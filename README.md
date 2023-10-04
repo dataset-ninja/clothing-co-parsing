@@ -1,3 +1,3 @@
-# Clothing Co-Parsing
+# CCP: Clothing Co-Parsing
 
-Clothing Co-Parsing is a dataset for semantic segmentation task.
+CCP is a dataset for semantic segmentation task.

@@ -1,4 +1,4 @@
-Dataset **Clothing Co-Parsing** can be downloaded in [Supervisely format](https://developer.supervisely.com/api-references/supervisely-annotation-json-format):
+Dataset **CCP** can be downloaded in [Supervisely format](https://developer.supervisely.com/api-references/supervisely-annotation-json-format):
 
  [Download](Set 'HIDE_DATASET=False' to generate download link)
 
@@ -11,7 +11,7 @@ pip install --upgrade dataset-tools
 ``` python
 import dataset_tools as dtools
 
-dtools.download(dataset='Clothing Co-Parsing', dst_dir='~/dataset-ninja/')
+dtools.download(dataset='CCP', dst_dir='~/dataset-ninja/')
 ```
 Make sure not to overlook the [python code example](https://developer.supervisely.com/getting-started/python-sdk-tutorials/iterate-over-a-local-project) available on the Supervisely Developer Portal. It will give you a clear idea of how to effortlessly work with the downloaded dataset.
 
