@@ -34,7 +34,7 @@ RELEASE_DATE: Optional[str] = "2014-08-19"  # e.g. "YYYY-MM-DD"
 if RELEASE_DATE is None:
     RELEASE_YEAR: int = None
 
-HOMEPAGE_URL: str = None
+HOMEPAGE_URL: str = "https://github.com/bearpaw/clothing-co-parsing"
 # e.g. "https://some.com/dataset/homepage"
 
 PREVIEW_IMAGE_ID: int = 6599743
@@ -59,8 +59,7 @@ CLASS2COLOR: Optional[Dict[str, List[str]]] = None
 PAPER: Optional[Union[str, List[str], Dict[str, str]]] = ["https://arxiv.org/abs/1502.00739"]
 BLOGPOST: Optional[Union[str, List[str], Dict[str, str]]] = None
 REPOSITORY: Optional[Union[str, List[str], Dict[str, str]]] = {
-    "GitHub Page": "https://github.com/bearpaw/clothing-co-parsing",
-    "Alternative Kaggle": "https://www.kaggle.com/datasets/balraj98/clothing-coparsing-dataset/data",
+    "Alternative Kaggle": "https://www.kaggle.com/datasets/balraj98/clothing-coparsing-dataset/data"
 }
 
 CITATION_URL: Optional[str] = "https://github.com/bearpaw/clothing-co-parsing"
