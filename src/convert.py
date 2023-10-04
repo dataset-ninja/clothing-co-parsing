@@ -1,9 +1,11 @@
 import supervisely as sly
 import os
+import csv
+import numpy as np
 from dataset_tools.convert import unpack_if_archive
 import src.settings as s
 from urllib.parse import unquote, urlparse
-from supervisely.io.fs import get_file_name, get_file_size
+from supervisely.io.fs import get_file_name, get_file_name_with_ext
 import shutil
 
 from tqdm import tqdm
@@ -69,17 +71,100 @@ def count_files(path, extension):
 def convert_and_upload_supervisely_project(
     api: sly.Api, workspace_id: int, project_name: str
 ) -> sly.ProjectInfo:
-    ### Function should read local dataset and upload it to Supervisely project, then return project info.###
-    raise NotImplementedError("The converter should be implemented manually.")
+    anns_path = os.path.join("Clothing Co-Parsing","labels")
+    images_path = os.path.join("Clothing Co-Parsing","images")
+    classes_file_path = os.path.join("Clothing Co-Parsing","class_dict.csv")
+    image_to_anns_path = os.path.join("Clothing Co-Parsing","metadata.csv")
 
-    # dataset_path = "/local/path/to/your/dataset" # general way
-    # dataset_path = download_dataset(teamfiles_dir) # for large datasets stored on instance
-
-    # ... some code here ...
-
-    # sly.logger.info('Deleting temporary app storage files...')
-    # shutil.rmtree(storage_dir)
-
-    # return project
+    ds_name = "ds"
+    batch_size = 30
 
 
+    def get_unique_colors(img):
+        unique_colors = []
+        img = img.astype(np.int32)
+        h, w = img.shape[:2]
+        colhash = img[:, :, 0] * 256 * 256 + img[:, :, 1] * 256 + img[:, :, 2]
+        unq, unq_inv, unq_cnt = np.unique(colhash, return_inverse=True, return_counts=True)
+        indxs = np.split(np.argsort(unq_inv), np.cumsum(unq_cnt[:-1]))
+        col2indx = {unq[i]: indxs[i][0] for i in range(len(unq))}
+        for col, indx in col2indx.items():
+            if col != 0:
+                unique_colors.append((col // (256**2), (col // 256) % 256, col % 256))
+
+        return unique_colors
+
+
+    def create_ann(image_path):
+        labels = []
+        tags = []
+
+        image_np = sly.imaging.image.read(image_path)[:, :, 0]
+        img_height = image_np.shape[0]
+        img_wight = image_np.shape[1]
+
+        ann_path = os.path.join(anns_path, image_to_anns[get_file_name_with_ext(image_path)])
+        if ann_path.endswith(".txt"):
+            with open(ann_path) as f:
+                content = f.read().split("\n")
+                for curr_data in content:
+                    if len(curr_data) != 0:
+                        curr_meta = idx_to_tag_meta[int(curr_data)]
+                        tag = sly.Tag(curr_meta)
+                        tags.append(tag)
+        else:
+            mask_np = sly.imaging.image.read(ann_path)
+            unique_colors = get_unique_colors(mask_np)
+            for color in unique_colors:
+                mask = np.all(mask_np == color, axis=2)
+                bitmap = sly.Bitmap(mask)
+                obj_class = color_to_obj_class[color]
+                label = sly.Label(bitmap, obj_class)
+                labels.append(label)
+
+        return sly.Annotation(img_size=(img_height, img_wight), labels=labels, img_tags=tags)
+
+
+    color_to_obj_class = {}
+    idx_to_tag_meta = {}
+    with open(classes_file_path, "r") as file:
+        csvreader = csv.reader(file)
+        for idx, row in enumerate(csvreader):
+            if idx != 0:
+                color = (int(row[1]), int(row[2]), int(row[3]))
+                color_to_obj_class[color] = sly.ObjClass(row[0], sly.Bitmap, color=color)
+                idx_to_tag_meta[idx - 1] = sly.TagMeta(row[0], sly.TagValueType.NONE)
+
+    image_to_anns = {}
+    with open(image_to_anns_path, "r") as file:
+        csvreader = csv.reader(file)
+        for idx, row in enumerate(csvreader):
+            if idx != 0:
+                image_to_anns[row[1].split("/")[1]] = row[3]
+
+
+    project = api.project.create(workspace_id, project_name, change_name_if_conflict=True)
+
+    meta = sly.ProjectMeta(
+        obj_classes=list(color_to_obj_class.values()), tag_metas=list(idx_to_tag_meta.values())
+    )
+    api.project.update_meta(project.id, meta.to_json())
+
+    dataset = api.dataset.create(project.id, ds_name, change_name_if_conflict=True)
+
+    images_names = [im_name for im_name in os.listdir(images_path)]
+
+    progress = sly.Progress("Create dataset {}".format(ds_name), len(images_names))
+
+    for images_names_batch in sly.batched(images_names, batch_size=batch_size):
+        images_pathes_batch = [os.path.join(images_path, im_name) for im_name in images_names_batch]
+
+        img_infos = api.image.upload_paths(dataset.id, images_names_batch, images_pathes_batch)
+        img_ids = [im_info.id for im_info in img_infos]
+
+        anns = [create_ann(image_path) for image_path in images_pathes_batch]
+        api.annotation.upload_anns(img_ids, anns)
+
+        progress.iters_done_report(len(images_names_batch))
+
+    return project
