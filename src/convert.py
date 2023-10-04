@@ -1,14 +1,16 @@
-import supervisely as sly
-import os
 import csv
-import numpy as np
-from dataset_tools.convert import unpack_if_archive
-import src.settings as s
-from urllib.parse import unquote, urlparse
-from supervisely.io.fs import get_file_name, get_file_name_with_ext
+import os
 import shutil
+from urllib.parse import unquote, urlparse
 
+import numpy as np
+import supervisely as sly
+from dataset_tools.convert import unpack_if_archive
+from supervisely.io.fs import get_file_name, get_file_name_with_ext
 from tqdm import tqdm
+
+import src.settings as s
+
 
 def download_dataset(teamfiles_dir: str) -> str:
     """Use it for large datasets to convert them on the instance"""
@@ -31,7 +33,7 @@ def download_dataset(teamfiles_dir: str) -> str:
             total=fsize,
             unit="B",
             unit_scale=True,
-        ) as pbar:        
+        ) as pbar:
             api.file.download(team_id, teamfiles_path, local_path, progress_cb=pbar)
         dataset_path = unpack_if_archive(local_path)
 
@@ -59,7 +61,8 @@ def download_dataset(teamfiles_dir: str) -> str:
 
         dataset_path = storage_dir
     return dataset_path
-    
+
+
 def count_files(path, extension):
     count = 0
     for root, dirs, files in os.walk(path):
@@ -67,18 +70,18 @@ def count_files(path, extension):
             if file.endswith(extension):
                 count += 1
     return count
-    
+
+
 def convert_and_upload_supervisely_project(
     api: sly.Api, workspace_id: int, project_name: str
 ) -> sly.ProjectInfo:
-    anns_path = os.path.join("Clothing Co-Parsing","labels")
-    images_path = os.path.join("Clothing Co-Parsing","images")
-    classes_file_path = os.path.join("Clothing Co-Parsing","class_dict.csv")
-    image_to_anns_path = os.path.join("Clothing Co-Parsing","metadata.csv")
+    anns_path = os.path.join("Clothing Co-Parsing", "labels")
+    images_path = os.path.join("Clothing Co-Parsing", "images")
+    classes_file_path = os.path.join("Clothing Co-Parsing", "class_dict.csv")
+    image_to_anns_path = os.path.join("Clothing Co-Parsing", "metadata.csv")
 
     ds_name = "ds"
-    batch_size = 30
-
+    batch_size = 20
 
     def get_unique_colors(img):
         unique_colors = []
@@ -94,7 +97,6 @@ def convert_and_upload_supervisely_project(
 
         return unique_colors
 
-
     def create_ann(image_path):
         labels = []
         tags = []
@@ -104,15 +106,15 @@ def convert_and_upload_supervisely_project(
         img_wight = image_np.shape[1]
 
         ann_path = os.path.join(anns_path, image_to_anns[get_file_name_with_ext(image_path)])
-        if ann_path.endswith(".txt"):
-            with open(ann_path) as f:
-                content = f.read().split("\n")
-                for curr_data in content:
-                    if len(curr_data) != 0:
-                        curr_meta = idx_to_tag_meta[int(curr_data)]
-                        tag = sly.Tag(curr_meta)
-                        tags.append(tag)
-        else:
+        # if ann_path.endswith(".txt"):
+        #     with open(ann_path) as f:
+        #         content = f.read().split("\n")
+        #         for curr_data in content:
+        #             if len(curr_data) != 0:
+        #                 curr_meta = idx_to_tag_meta[int(curr_data)]
+        #                 tag = sly.Tag(curr_meta)
+        #                 tags.append(tag)
+        if not ann_path.endswith(".txt"):
             mask_np = sly.imaging.image.read(ann_path)
             unique_colors = get_unique_colors(mask_np)
             for color in unique_colors:
@@ -124,7 +126,6 @@ def convert_and_upload_supervisely_project(
 
         return sly.Annotation(img_size=(img_height, img_wight), labels=labels, img_tags=tags)
 
-
     color_to_obj_class = {}
     idx_to_tag_meta = {}
     with open(classes_file_path, "r") as file:
@@ -133,7 +134,6 @@ def convert_and_upload_supervisely_project(
             if idx != 0:
                 color = (int(row[1]), int(row[2]), int(row[3]))
                 color_to_obj_class[color] = sly.ObjClass(row[0], sly.Bitmap, color=color)
-                idx_to_tag_meta[idx - 1] = sly.TagMeta(row[0], sly.TagValueType.NONE)
 
     image_to_anns = {}
     with open(image_to_anns_path, "r") as file:
@@ -142,12 +142,9 @@ def convert_and_upload_supervisely_project(
             if idx != 0:
                 image_to_anns[row[1].split("/")[1]] = row[3]
 
-
     project = api.project.create(workspace_id, project_name, change_name_if_conflict=True)
 
-    meta = sly.ProjectMeta(
-        obj_classes=list(color_to_obj_class.values()), tag_metas=list(idx_to_tag_meta.values())
-    )
+    meta = sly.ProjectMeta(obj_classes=list(color_to_obj_class.values()))
     api.project.update_meta(project.id, meta.to_json())
 
     dataset = api.dataset.create(project.id, ds_name, change_name_if_conflict=True)
