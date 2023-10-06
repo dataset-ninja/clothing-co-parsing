@@ -24,7 +24,7 @@ LICENSE: License = License.Apache_2_0()
 APPLICATIONS: List[Union[Industry, Domain, Research]] = [
     Industry.Retail(),
 ]
-CATEGORY: Category = Category.Entertainment(extra=Category.Surveillance)
+CATEGORY: Category = Category.Retail(extra=[Category.Entertainment(), Category.Surveillance()])
 
 CV_TASKS: List[CVTask] = [CVTask.SemanticSegmentation()]
 ANNOTATION_TYPES: List[AnnotationType] = [AnnotationType.SemanticSegmentation()]
