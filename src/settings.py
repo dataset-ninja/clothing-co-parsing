@@ -14,7 +14,7 @@ from dataset_tools.templates import (
 # * Before uploading to instance #
 ##################################
 PROJECT_NAME: str = "CCP"
-PROJECT_NAME_FULL: str = "CCP: Clothing Co-Parsing"
+PROJECT_NAME_FULL: str = "CCP: Clothing Co-Parsing Dataset"
 HIDE_DATASET = True  # set False when 100% sure about repo quality
 
 ##################################
@@ -22,8 +22,7 @@ HIDE_DATASET = True  # set False when 100% sure about repo quality
 ##################################
 LICENSE: License = License.Apache_2_0()
 APPLICATIONS: List[Union[Industry, Domain, Research]] = [
-    Industry.Entertainment(is_used=False),
-    Industry.Surveillance(is_used=False),
+    Industry.Retail(),
 ]
 CATEGORY: Category = Category.Entertainment(extra=Category.Surveillance)
 
