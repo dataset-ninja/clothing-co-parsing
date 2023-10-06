@@ -1,1 +1,13 @@
-**CCP** is created by authors, consisting of 2,098 high-resolution fashion photos with huge human/clothing variations, which are in a wide range of styles, accessories, garments, and poses. More than 1000 images of CCP are with superpixel-level annotations with totally 57 tags, and the rest of images are annotated with image-level tags. All annotations are produced by a professional team.
+Clothing recognition and retrieval have huge potentials in internet-based e-commerce, as the revenue of online clothing sale keeps highly increasing every year. Authors focused on building an engineered and applicable system to jointly parse a batch of clothing images and produce accurate pixelwise annotation of clothing items. They consider the following challenges to build such a system:
+
+- The appearances of clothes and garment items are often diverse with different styles and textures, compared with other common objects. It is usually hard to segment and recognize clothes via only bottom-up image features.
+- The variations of human poses and self-occlusions are non-trivial issues for clothing recognition, although the clothing images can be in clear resolution and nearly frontal view.
+- The number of fine-grained clothes categories is very large, e.g., more than 50 categories in the [Fashionista dataset](https://www.cs.unc.edu/~hadi/publications/papers/yamaguchiICVPR12parsing.pdf); the categories are relatively fewer in existing co-segmentation systems.
+
+To address the above issues, authors develop the system consisting of two sequential phases of inference over a set of clothing images, i.e. image co-segmentation for extracting distinguishable clothes regions, and region co-labeling for recognizing various garment items.
+
+![Fig](https://i.ibb.co/LZ96bbk/Screenshot-2023-10-06-113318.png)
+
+<span style="font-size: smaller; font-style: italic;">Illustration of the proposed clothing co-parsing framework, which consists of two sequential phases of optimization: (a) clothing co-segmentation for extracting coherent clothes regions, and (b) region co-labeling for recognizing various clothes garments. Specifically, clothing co-segmentation iterates with three steps: (a1) grouping superpixels into regions, (a2) selecting confident foreground regions to train E-SVM classifiers, and (a3) propagating segmentations by applying E-SVM templates over all images. Given the segmented regions, clothing co-labeling is achieved based on a multi-image graphical model, as illustrated in (b).</span>
+
+ To meet these challenges, authors create **CCP: Clothing Co-Parsing** dataset, consisting of 2,098 high-resolution fashion photos with huge human/clothing variations, which are in a wide range of styles, accessories, garments, and poses. More than 1000 images of CCP are with superpixel-level annotations with totally 57 tags, and the rest of images are annotated with image-level tags. All annotations are produced by a professional team.
