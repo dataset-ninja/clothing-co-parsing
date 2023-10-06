@@ -1,4 +1,4 @@
-**CCP: Clothing Co-Parsing** is a dataset for a semantic segmentation task. Possible applications of the dataset could be in the entertainment and surveillance industries. 
+**CCP: Clothing Co-Parsing Dataset** is a dataset for a semantic segmentation task. It is used in the retail industry. 
 
 The dataset consists of 2098 images with 8273 labeled objects belonging to 59 different classes including *null*, *skin*, *hair*, and other: *shoes*, *bag*, *pants*, *sunglasses*, *dress*, *purse*, *coat*, *accessories*, *blouse*, *belt*, *shirt*, *skirt*, *jeans*, *sweater*, *hat*, *t-shirt*, *blazer*, *stockings*, *suit*, *bracelet*, *scarf*, *jacket*, *sandals*, *socks*, *shorts*, and 31 more.
 
