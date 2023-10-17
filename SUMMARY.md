@@ -4,4 +4,6 @@ The dataset consists of 2098 images with 8273 labeled objects belonging to 59 di
 
 Images in the CCP dataset have pixel-level semantic segmentation annotations. There are 1094 (52% of the total) unlabeled images (i.e. without annotations). There are no pre-defined <i>train/val/test</i> splits in the dataset. Dataset contains image-level tags. The dataset was released in 2014 by the Sun Yat-sen University, The Chinese University of Hong Kong, and SYSU-CMU Shunde International Joint Research Institute.
 
-<img src="https://github.com/dataset-ninja/clothing-co-parsing/raw/main/visualizations/poster.png">
+Here is a visualized example for randomly selected sample classes:
+
+[Dataset classes](https://github.com/dataset-ninja/clothing-co-parsing/raw/main/visualizations/classes_preview.webm)
