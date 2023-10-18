@@ -20,7 +20,7 @@ HIDE_DATASET = False  # set False when 100% sure about repo quality
 ##################################
 # * After uploading to instance ##
 ##################################
-LICENSE: License = License.Apache_2_0()
+LICENSE: License = License.Apache_2_0(source_url="https://github.com/bearpaw/clothing-co-parsing/blob/master/LICENSE")
 APPLICATIONS: List[Union[Industry, Domain, Research]] = [
     Industry.Retail(),
 ]
@@ -58,7 +58,7 @@ CLASS2COLOR: Optional[Dict[str, List[str]]] = None
 PAPER: Optional[Union[str, List[str], Dict[str, str]]] = ["https://arxiv.org/abs/1502.00739"]
 BLOGPOST: Optional[Union[str, List[str], Dict[str, str]]] = None
 REPOSITORY: Optional[Union[str, List[str], Dict[str, str]]] = {
-    "Alternative Kaggle": "https://www.kaggle.com/datasets/balraj98/clothing-coparsing-dataset/data"
+    "Kaggle": "https://www.kaggle.com/datasets/balraj98/clothing-coparsing-dataset/data"
 }
 
 CITATION_URL: Optional[str] = "https://github.com/bearpaw/clothing-co-parsing"
