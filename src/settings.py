@@ -24,7 +24,7 @@ LICENSE: License = License.Apache_2_0(source_url="https://github.com/bearpaw/clo
 APPLICATIONS: List[Union[Industry, Domain, Research]] = [
     Industry.Retail(),
 ]
-CATEGORY: Category = Category.Retail(extra=[Category.Entertainment(), Category.Surveillance()])
+CATEGORY: Category = Category.Retail()
 
 CV_TASKS: List[CVTask] = [CVTask.SemanticSegmentation()]
 ANNOTATION_TYPES: List[AnnotationType] = [AnnotationType.SemanticSegmentation()]
@@ -63,6 +63,7 @@ REPOSITORY: Optional[Union[str, List[str], Dict[str, str]]] = {
 
 CITATION_URL: Optional[str] = "https://github.com/bearpaw/clothing-co-parsing"
 AUTHORS: Optional[List[str]] = ["Wei Yang", "Ping Luo", "Liang Lin"]
+AUTHORS_CONTACTS: Optional[List[str]] = ["linliang@ieee.org"]
 
 ORGANIZATION_NAME: Optional[Union[str, List[str]]] = [
     "Sun Yat-sen University",
@@ -125,6 +126,7 @@ def get_settings():
     settings["repository"] = REPOSITORY
     settings["citation_url"] = CITATION_URL
     settings["authors"] = AUTHORS
+    settings["authors_contacts"] = AUTHORS_CONTACTS
     settings["organization_name"] = ORGANIZATION_NAME
     settings["organization_url"] = ORGANIZATION_URL
     settings["slytagsplit"] = SLYTAGSPLIT
