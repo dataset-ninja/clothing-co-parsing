@@ -26,7 +26,7 @@ APPLICATIONS: List[Union[Industry, Domain, Research]] = [
 ]
 CATEGORY: Category = Category.Retail()
 
-CV_TASKS: List[CVTask] = [CVTask.SemanticSegmentation()]
+CV_TASKS: List[CVTask] = [CVTask.SemanticSegmentation(), CVTask.UnsupervisedLearning()]
 ANNOTATION_TYPES: List[AnnotationType] = [AnnotationType.SemanticSegmentation()]
 
 RELEASE_DATE: Optional[str] = "2014-08-19"  # e.g. "YYYY-MM-DD"
