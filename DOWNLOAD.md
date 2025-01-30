@@ -1,6 +1,6 @@
 Dataset **CCP** can be downloaded in [Supervisely format](https://developer.supervisely.com/api-references/supervisely-annotation-json-format):
 
- [Download](https://www.dropbox.com/scl/fi/7tdnktgu08inqahkje18u/ccp-DatasetNinja.tar?rlkey=wmvfmncfd1keghdkftqdexy37&dl=1)
+ [Download](https://assets.supervisely.com/remote/eyJsaW5rIjogImZzOi8vYXNzZXRzLzI0MzhfQ0NQL2NjcC1EYXRhc2V0TmluamEudGFyIiwgInNpZyI6ICJaRW1zY09NRmdxQXRtRWhIbWgzMlZBY1ZscU94QVd2NVNEc2pzVmZBTW5RPSJ9)
 
 As an alternative, it can be downloaded with *dataset-tools* package:
 ``` bash
